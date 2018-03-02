@@ -1,18 +1,14 @@
 import React from 'react';
+import { render } from 'react-dom';
 
-const StoryBox = () => {
-  const now = new Date();
-  const topicsList = ['HTML', 'JavaScript', 'React'];
-  return (
-    <div>
-      <h3>Stories App</h3>
-      <p className="lead">
-        Current time: {now.toTimeString()}
-      </p>
-      <ul>
-        {topicsList.map(topic => <li>{topic}</li>)}
-      </ul>
-    </div>
-  );
-};
-export default StoryBox;
+export default class Hello extends React.Component {
+  render() {
+    return (
+      <div>
+        Hello from react
+      </div>
+    );
+  }
+}
+
+render(<Hello />, document.getElementById('app'));
