@@ -1,13 +1,19 @@
 import React from 'react';
 import { render } from 'react-dom';
 import Comment from './components/Comment';
+import CommentForm from './components/CommentForm'
 
 export default class Hello extends React.Component {
   constructor(){
     super();
 
     this.state = {
-      showComments: false
+      showComments: false,
+      comments: [
+        {id:1, author:'Morgan McCircuit', body:'Great picture!'},
+        {id:2, author:'Bending Bender', body:'Excellent Stuff'},
+        {id:3, author:'John Whistle', body:'Amazing Wok'}
+      ]
     };
   }
 
@@ -24,6 +30,7 @@ export default class Hello extends React.Component {
 
     return (
       <div className="comment-box">
+        <CommentForm addComment={this._addComment.bind(this)}/>
         <button onClick={this._handleClick.bind(this)}>{buttonText}</button>
         <h3>Comments</h3>
         <h4 className="comment-count">
@@ -34,12 +41,8 @@ export default class Hello extends React.Component {
     )
   }
   _getComments(){
-    const commentList = [
-      {id:1, author:'Morgan McCircuit', body:'Great picture!'},
-      {id:2, author:'Bending Bender', body:'Excellent Stuff'},
-      {id:3, author:'John Whistle', body:'Amazing Wok'}
-    ];
-    return commentList.map((comment) =>{
+
+    return this.state.comments.map((comment) => {
       return (
         <Comment
           author={comment.author} body={comment.body} key={comment.id}/>
@@ -59,6 +62,14 @@ export default class Hello extends React.Component {
     this.setState({
       showComments: !this.state.showComments
     });
+  }
+  _addComment(author, body) {
+    const comment = {
+      id: this.state.comments.lenght + 1,
+      author,
+      body
+    };
+    this.setState({comments: this.state.comments.concat([comment])});
   }
 }
 
