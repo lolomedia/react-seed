@@ -2,19 +2,27 @@ import React from 'react';
 import { render } from 'react-dom';
 import Comment from './components/Comment';
 import CommentForm from './components/CommentForm'
+import jQuery from 'jQuery';
+import PropTypes from 'prop-types';
 
 export default class Hello extends React.Component {
+
+  static get propTypes() {
+      return {
+          newComment: PropTypes.any
+      };
+  }
   constructor(){
     super();
 
     this.state = {
       showComments: false,
-      comments: [
-        {id:1, author:'Morgan McCircuit', body:'Great picture!'},
-        {id:2, author:'Bending Bender', body:'Excellent Stuff'},
-        {id:3, author:'John Whistle', body:'Amazing Wok'}
-      ]
+      comments: []
     };
+  }
+
+  componentWillMount(){
+    this._fetchComments();
   }
 
   render (){
@@ -40,12 +48,33 @@ export default class Hello extends React.Component {
       </div>
     )
   }
+
+  componentDidMount(){
+    this._timer = setInterval(() => this._fetchComments(), 5000);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this._timer);
+  }
+
+  _fetchComments(){
+    jQuery.ajax({
+      method: 'GET',
+      url: '/api/comments',
+      success: (comments) => {
+        this.setState({comments})
+      }
+    });
+  }
   _getComments(){
 
     return this.state.comments.map((comment) => {
       return (
         <Comment
-          author={comment.author} body={comment.body} key={comment.id}/>
+          author={comment.author}
+          body={comment.body}
+          key={comment.id}
+          onDelete={this._deleteComment.bind(this)} />
       );
     });
   }
@@ -64,12 +93,25 @@ export default class Hello extends React.Component {
     });
   }
   _addComment(author, body) {
-    const comment = {
-      id: this.state.comments.lenght + 1,
-      author,
-      body
-    };
-    this.setState({comments: this.state.comments.concat([comment])});
+    const comment = { author, body };
+    jQuery.post('/api/comments', { comment })
+      .success(newComment => {
+        this.setState({comments: this.state.comments.concat([comment])});
+      });
+  }
+
+  _deleteComment(comment) {
+    jQuery.ajax({
+      method: 'DELETE',
+      url: './api/comments/${comment.id}'
+    });
+
+    let i;
+    const comments = [...this.state.comments];
+    const commentIndex = comments.indexOf(comment);
+    comments.splice(commentIndex, i);
+
+    this.setState({ comments });
   }
 }
 
