@@ -33,6 +33,7 @@
     "webpack-dev-server": "^3.1.0"
   },
   "dependencies": {
+    "jquery": "^3.3.1",
     "npm": "^5.7.1",
     "react": "^16.2.0",
     "react-dom": "^16.2.0"

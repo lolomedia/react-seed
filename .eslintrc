@@ -1,6 +1,7 @@
 {
   parser: "babel-eslint",
   "rules": {
+    "no-unused-vars": 0,
     "max-len": [1, 120, 2, {ignoreComments: true}]
   },
   "extends": ["eslint:recommended", "plugin:react/recommended"],

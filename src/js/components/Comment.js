@@ -6,7 +6,9 @@ export default class Comment extends React.Component {
   static get propTypes() {
       return {
           author: PropTypes.any,
-          body: PropTypes.any
+          body: PropTypes.any,
+          onDelete: PropTypes.any,
+          comment: PropTypes.any
       };
   }
 
@@ -24,5 +26,13 @@ export default class Comment extends React.Component {
         </div>
       </div>
     );
+  }
+
+  _handleDelete(event){
+    event.preventDefault();
+    if (confirm('Are you sure?')) {
+      this.props.onDelete(this.props.comment);
+    }
+
   }
 }
